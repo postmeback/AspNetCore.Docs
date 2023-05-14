@@ -99,7 +99,26 @@ Create a table in SQL Server by running the `sql-cache create` command. Provide 
 ```dotnetcli
 dotnet sql-cache create "Data Source=(localdb)/MSSQLLocalDB;Initial Catalog=DistCache;Integrated Security=True;" dbo TestCache
 ```
+```sql script
+CREATE TABLE [dbo].[MyCache](
+	[Id] NVARCHAR(449) NOT NULL,
+	[Value] [VARBINARY](MAX) NOT NULL,
+	[ExpiresAtTime] [DATETIMEOFFSET](7) NOT NULL,
+	[SlidingExpirationInSeconds] [BIGINT] NULL,
+	[AbsoluteExpiration] [DATETIMEOFFSET](7) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 
+CREATE NONCLUSTERED INDEX [Index_ExpiresAtTime] ON [dbo].[MyCache]
+(
+	[ExpiresAtTime] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+```
 A message is logged to indicate that the tool was successful:
 
 ```console
